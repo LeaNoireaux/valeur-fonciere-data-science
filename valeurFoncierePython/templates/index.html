@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valeurs Foncieres Python</title>
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyse des données DVF en Python</h1>
+        <h2>Travail réalisé par Amine Moussa, Cécile Paihle & Léa Noireaux</h2>
+        <h3>Vous pouvez choisir un département</h3>
+
+        <!-- Pour choisir un département et changer les graphiques en fonction de celui-ci-->
+        <form action="/{% if action %}{{action}}{% endif %}" method="POST">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit" value="Valider">
+        </form>
+        <br> <!-- Line break pour rajouter un espace entre le form du departement et de l'année-->
+        <br>
+        <a href="/"> Acceuil</a>
+        <a href="/commune">Communes</a> <!-- Lien html vers commune pour avoir les graphiques suivant la commune -->
+        <br>
+        <br>
+        <div class="years">
+            <button onclick="changeYear('2016')">2016</button>
+            <button onclick="changeYear('2017')">2017</button>
+            <button onclick="changeYear('2018')">2018</button>
+            <button onclick="changeYear('2019')">2019</button>
+            <button onclick="changeYear('2020')">2020</button>
+        </div>
+        {% if graphics %}
+            {% for graphic in graphics %}
+                {{ graphic | safe }}
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Pour pouvoir changer l'url suivant l'annee qu'on choisit -->
+    <script>
+        const changeYear = (year) => {
+            var queryParams = new URLSearchParams(window.location.search);
+            queryParams.set("year", year);
+            var url = window.location.href;
+            url = url.split('?')[0]
+            window.location.href = url + "?"+queryParams.toString()
+        }
+    </script>
+
+</body>
+</html>
